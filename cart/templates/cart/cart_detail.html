@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Your Shopping Cart{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h1>Your Shopping Cart</h1>
+  
+  {% if cart %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Total</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in cart_items %}  {# این خط درست است و باید کار کند #}
+          <tr>
+            <td>{{ item.product.name }}</td>
+            <td>${{ item.price }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>${{ item.total_price }}</td>
+            <td>
+              <a href="{% url 'cart:remove_cart' item.product.id %}" class="btn btn-sm btn-danger">Remove</a>
+            </td>
+          </tr>
+        {% empty %}  {# اضافه کردن این بخش برای زمانی که سبد خالی است #}
+          <tr>
+            <td colspan="5" class="text-center">Your cart is empty</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3"><strong>Total</strong></td>
+          <td colspan="2"><strong>${{ cart.get_total_price }}</strong></td>
+        </tr>
+      </tfoot>
+    </table>
+    
+    <div class="d-flex justify-content-between mt-4">
+      <a href="{% url 'shop:product_list' %}" class="btn btn-secondary">Continue Shopping</a>
+      <a href="{% url 'orders:order_create' %}" class="btn btn-primary">Proceed to Checkout</a>
+    </div>
+  {% else %}
+    <div class="alert alert-info">
+      <p>Your cart is empty.</p>
+      <a href="{% url 'shop:product_list' %}" class="btn btn-primary">Continue Shopping</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

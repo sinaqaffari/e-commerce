@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}محصولات{% endblock %}
+  <!-- در داخل حلقه محصولات -->
+<a href="{% url 'cart:add_cart' product.id %}" class="btn btn-primary">Add to Cart</a>
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">محصولات</h1>
+    
+    {% if category %}
+        <h2 class="mb-3">دسته‌بندی: {{ category.name }}</h2>
+    {% endif %}
+    
+    <div class="row">
+        {% for product in products %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                    {% else %}
+                        <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="تصویر محصول">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.description|truncatewords:10 }}</p>
+                        <p class="card-text"><strong>{{ product.price }} تومان</strong></p>
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ product.get_absolute_url }}" class="btn btn-outline-primary">مشاهده</a>
+                            <a href="{% url 'cart:add_cart' product.id %}" class="btn btn-primary">افزودن به سبد</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-warning">هیچ محصولی یافت نشد.</div>
+            </div>
+        {% endfor %}
+    </div>
+    
+    <div class="mt-4">
+        <h3>دسته‌بندی‌ها</h3>
+        <div class="list-group">
+            <a href="{% url 'shop:product_list' %}" class="list-group-item list-group-item-action">
+                همه محصولات
+            </a>
+            {% for category in categories %}
+                <a href="{% url 'shop:product_list_by_category' category.slug %}" class="list-group-item list-group-item-action">
+                    {{ category.name }}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

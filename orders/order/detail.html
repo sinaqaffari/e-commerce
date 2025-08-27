@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Order Detail{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h1>Order #{{ order.id }}</h1>
+  
+  <ul>
+    <li>Name: {{ order.first_name }} {{ order.last_name }}</li>
+    <li>Email: {{ order.email }}</li>
+    <li>Address: {{ order.address }}, {{ order.postal_code }}, {{ order.city }}</li>
+    <li>Total: ${{ order.get_total_cost }}</li>
+    <li>Status: {{ order.paid|yesno:"Paid,Unpaid" }}</li>
+  </ul>
+  
+  <h2>Items</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in order.items.all %}
+        <tr>
+          <td>{{ item.product.name }}</td>
+          <td>${{ item.price }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>${{ item.get_cost }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
